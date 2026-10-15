@@ -1,0 +1,13 @@
+const t=document.getElementById('track'),bar=document.querySelector('#bar i');
+const upd=()=>{bar.style.width=Math.max(8,100*(t.scrollLeft+t.clientWidth)/t.scrollWidth)+'%'};
+t.addEventListener('scroll',upd);upd();
+const step=()=>t.clientWidth*.8;
+document.getElementById('pv').onclick=()=>t.scrollBy({left:-step()});
+document.getElementById('nx').onclick=()=>t.scrollBy({left:step()});
+t.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){t.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
+const tb=[...document.querySelectorAll('.tog button')];
+const view=v=>{document.body.classList.toggle('m',v==='m');tb.forEach(b=>b.classList.toggle('on',b.dataset.v===v));document.querySelectorAll('img[data-d]').forEach(i=>i.src=i.dataset[v]);t.scrollLeft=0;upd()};
+tb.forEach(b=>b.onclick=()=>view(b.dataset.v));view('d');
+const lb=document.getElementById('lb'),li=lb.querySelector('img');
+document.addEventListener('click',e=>{if(e.target.matches('figure img')){li.src=e.target.src;lb.classList.add('on')}else lb.classList.remove('on')});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')t.scrollBy({left:step()});if(e.key==='ArrowLeft')t.scrollBy({left:-step()});if(e.key==='m')view(document.body.classList.contains('m')?'d':'m');if(e.key==='Escape')lb.classList.remove('on')});
